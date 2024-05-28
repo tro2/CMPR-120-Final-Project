@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -76,24 +77,33 @@ int main()
 void displayBalance(double balance) // case 1
 {
 	cout << "You entered 1: Display available credit" << endl;
+	cout << fixed << setprecision(2);
 	cout << "Your available balance is: $" << balance << endl << endl;
 }
 
 void addCredits(double& balance) // case 2
 {
 	cout << "You entered 2: Add credits to my account" << endl;
+
+	if (balance >= 20) 
+		cout << "Your balance is at or above the maximum." << endl;
+
 	cout << "=> Please enter the amount you would like to add: ";
-	int amount;
+	double amount;
 	do {
 		cin >> amount;
 		cout << endl << endl;
 		cin.clear();
 		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		if (amount < 0.0f || amount + balance >= MAX_ALLOWED)
-			cout << "Invalid value, Please try again" << endl;
-	} while (amount < 0.0f || amount + balance >= MAX_ALLOWED);
+		if (amount < 0.0f || amount + balance >= MAX_ALLOWED) {
+			cout << "Invalid value, you cannot subtract money with this method and cannot increase your balance above $20.00" << endl;
+			cout << fixed << setprecision(2);
+			cout << "Your current balance is: $" << balance;
+		}	
+	} while (amount < 0.0f || amount + balance > MAX_ALLOWED);
 
 	balance += amount;
+	cout << fixed << setprecision(2);
 	cout << "You balance is now: $" << balance << endl << endl << endl;
 }
 
@@ -119,7 +129,7 @@ void playGame(double& balance, int& missedGuesses, int& correctGuesses, int& gue
 
 		if (guessNum == ranNum)
 		{
-			cout << "Congratulations, you guessed correctly! You won $2!" << endl << endl << endl;
+			cout << "Congratulations, you guessed correctly! You won $2.00!" << endl << endl << endl;
 			balance += 2;
 			correctGuesses++;
 		}
@@ -145,11 +155,14 @@ void displayStats(string& fullName, double balance, int missedGuesses, int corre
 
 	cout << "Date and time: " << __DATE__ << "  " << __TIME__ << endl;
 	cout << "Players Name: " << fullName << endl;
-	cout << "Available credit: " << balance << endl;
+	cout << fixed << setprecision(2);
+	cout << "Available credit: $" << balance << endl;
 	cout << "Correct Guesses: " << correctGuesses << endl;
 	cout << "Missed Guesses: " << missedGuesses << endl;
-	cout << "Money won: " << correctGuesses * 2 << endl;
-	cout << "Money lost: " << missedGuesses * 1 << endl << endl << endl;
+	cout << fixed << setprecision(2);
+	cout << "Money won: $" << correctGuesses * 2.0 << endl;
+	cout << fixed << setprecision(2);
+	cout << "Money lost: $" << missedGuesses * 1.0 << endl << endl << endl;
 }
 
 void saveStats(string& fullName, double balance, int missedGuesses, int correctGuesses, int guesses) // case 5
@@ -162,12 +175,15 @@ void saveStats(string& fullName, double balance, int missedGuesses, int correctG
 	outFile.open(generateFileName(fullName));
 	outFile << "Date and Time: " << __DATE__ << " " << __TIME__ << endl;
 	outFile << "Players Name: " << fullName << endl;
-	outFile << "Available credits: " << balance << endl;
+	outFile << fixed << setprecision(2);
+	outFile << "Available credits: $" << balance << endl;
 	outFile << "Games Played: " << guesses << endl;
 	outFile << "Correct Guesses: " << correctGuesses << endl;
 	outFile << "Missed Guesses: " << missedGuesses << endl;
-	outFile << "Money won: " << correctGuesses * 2 << endl;
-	outFile << "Money lost: " << missedGuesses * (-1) << endl << endl;
+	outFile << fixed << setprecision(2);
+	outFile << "Money won: $" << correctGuesses * 2.0 << endl;
+	outFile << fixed << setprecision(2);
+	outFile << "Money lost: $" << missedGuesses * 1.0 << endl << endl;
 
 	outFile.close();
 
